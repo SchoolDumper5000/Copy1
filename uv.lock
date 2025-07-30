@@ -5,3 +5,31 @@ requires-python = ">=3.11"
 name = "python-template"
 version = "0.1.0"
 source = { virtual = "." }
+dependencies = [
+    { name = "survey" },
+    { name = "termcolor" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "survey", specifier = ">=5.4.2" },
+    { name = "termcolor", specifier = ">=3.1.0" },
+]
+
+[[package]]
+name = "survey"
+version = "5.4.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/72/72/bb870980cf2785eb7b4421a7ad2489e4138e5a6d091c06e30589755e8fc2/survey-5.4.2.tar.gz", hash = "sha256:e2f9e3b526f0db2fe8f9f4960e5fc2a93119925d2350b18e2d445d6740692af6", size = 1569930 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/69/af/4f1313af20d47ba498c0dea05127cf8325530e5513256e4b15028808e24f/survey-5.4.2-py3-none-any.whl", hash = "sha256:49473702e82542ea14c9e983db234935a76add4cd5d5437e72b5ea9a5d214c93", size = 63749 },
+]
+
+[[package]]
+name = "termcolor"
+version = "3.1.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ca/6c/3d75c196ac07ac8749600b60b03f4f6094d54e132c4d94ebac6ee0e0add0/termcolor-3.1.0.tar.gz", hash = "sha256:6a6dd7fbee581909eeec6a756cff1d7f7c376063b14e4a298dc4980309e55970", size = 14324 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4f/bd/de8d508070629b6d84a30d01d57e4a65c69aa7f5abe7560b8fad3b50ea59/termcolor-3.1.0-py3-none-any.whl", hash = "sha256:591dd26b5c2ce03b9e43f391264626557873ce1d379019786f99b0c2bee140aa", size = 7684 },
+]
