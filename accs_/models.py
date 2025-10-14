@@ -44,7 +44,7 @@ class AuthUtils:
       return (True,result[0], result[1], result[3], result[4])
     elif result is None:
       return ( False )
-
+      
 
   def add_demo_accounts(self):
     db, cursor = self.get_cur()
@@ -95,5 +95,5 @@ class AuthUtils:
     else :
       return False
 
-
+  
   #def
