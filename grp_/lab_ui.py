@@ -87,6 +87,7 @@ class LabGroupHandler:
         os.system("clear")
         print(f"Ｍｅｍｂｅｒｓ ｏｆ Ｇｒｏｕｐ: {group_name}")
         self.ui.primary_line("grey", 80)
+        
         for m in members:
             print(f"Ｕｓｅｒ: {m[0]} | Ｒｏｌｅ: {m[1]}")
         self.ui.primary_line("grey", 80)
