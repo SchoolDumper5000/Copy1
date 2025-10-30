@@ -21,13 +21,13 @@ class ExperimentHandler:
     def set_logged_in_user(self, user):
         self.logged_in_user = user
 
-    # ========== TEACHER SECTION ==========
+    
     def create_experiment(self):
         os.system("clear")
         self.ui.default_message("Ｃｒｅａｔｅ Ａ Ｎｅｗ Ｅｘｐｅｒｉｍｅｎｔ")
         self.ui.leave_line()
 
-        # 1️⃣ Filter groups: show only groups where this teacher is a member
+        
         teacher_groups = self.lab.get_groups_by_user(self.logged_in_user)
         teacher_groups = [g[1] for g in teacher_groups if g[3] == "Teacher"]
 
@@ -45,7 +45,7 @@ class ExperimentHandler:
 
         name = input(colored("> Ｅｘｐｅｒｉｍｅｎｔ Ｎａｍｅ :", "white")).strip()
 
-        # 2️⃣ Cancel if experiment name is null
+        
         if not name:
             self.ui.indicator_message("Ｃｒｅａｔｅ ｅｘｐｅｒｉｍｅｎｔ ｃａｎｃｅｌｌｅｄ （Ｎｏ ｎａｍｅ ｇｉｖｅｎ）")
             return ("MENU", self.logged_in_user)
@@ -78,12 +78,14 @@ class ExperimentHandler:
         while True:
             os.system("clear")
             print(f"""
+Ｅｘｐｅｒｉｍｅｎｔ ｎａｍｅ: {selected[1]}
+Ｇｒｏｕｐ:
 ＡＩＭ: {selected[3]}
 ＰＲＯＣＥＤＵＲＥ: {selected[4]}
 ＳＴＡＴＵＳ: {selected[5]}
 ＤＵＥ ＤＡＴＥ: {selected[6]}
 """)
-            # 3️⃣ Add "Delete Experiment" option
+            
             sub_options = ["Ｃｈａｎｇｅ Ｓｔａｔｕｓ", "Ｖｉｅｗ Ｒｅｓｕｌｔｓ", "Ｄｅｌｅｔｅ Ｅｘｐｅｒｉｍｅｎｔ", "Ｂａｃｋ"]
             sub_index = survey.routines.select("Ｓｅｌｅｃｔ ａｎ ｏｐｅｒａｔｉｏｎ:\n", options=sub_options)
 
@@ -120,7 +122,7 @@ class ExperimentHandler:
             print(f"| {r[0]:18} | {r[1]:18} | {str(r[2]):18} |")
         print("+--------------------+--------------------+--------------------+")
 
-        # 4️⃣ Add missing-students table
+        
         missing_students = [s for s in all_students if s not in students_with_results]
         if missing_students:
             print("\nStudents who have yet to give their result:\n")
@@ -133,7 +135,7 @@ class ExperimentHandler:
 
         input("\nＰｒｅｓｓ ＥＮＴＥＲ ｔｏ ｇｏ ｂａｃｋ．．．")
 
-    # ========== STUDENT SECTION ==========
+    
     def student_view_experiments(self):
         os.system("clear")
         creds = self.auth.get_details(self.logged_in_user)
@@ -179,7 +181,7 @@ class ExperimentHandler:
 
         return ("MENU", self.logged_in_user)
 
-    # ========== MAIN HANDLER ==========
+    
     def handler(self):
         os.system("clear")
         creds = self.auth.get_details(self.logged_in_user)

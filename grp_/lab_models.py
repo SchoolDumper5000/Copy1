@@ -45,7 +45,7 @@ class LabUtils:
     def add_member(self, group_name, username):
         """Add a member as Student if they exist in users table"""
         if not self.auth.user_exists(username):
-            return False   # user not found
+            return False   
         db, cursor = self.get_cur()
         cursor.execute(
             'INSERT INTO lab_groups (group_name, username, role) VALUES (?, ?, ?)',
