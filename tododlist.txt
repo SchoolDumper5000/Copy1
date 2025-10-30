@@ -1,0 +1,9 @@
+Akshat:
+1) Set limit on aim (everything) for 80 characters
+2) Set each step limit as 90 characters in procedure per step
+3) Take multiple steps
+
+
+Ishan:
+1)Make user experinece better (make correct font, spacing, colour,better instuctions for user)
+2)make it look less AI (like: remove comments)

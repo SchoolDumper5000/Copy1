@@ -77,7 +77,11 @@ class SignUpHandler:
             time.sleep(1)
             user_exists = self.auth_obj.user_exists(username)
             if username == " " or username == "": break
-
+            if len(username)>20:
+                self.ui.error_message(
+                    "Ｓｔａｔｕｓ： Ｃｈａｎｇｉｎｇ Ｆａｉｌｅｄ\nＲｅａｓｏｎ： Ｕｓｅｒｎａｍｅ ｃａｎ ｂｅ ｌｏｎｇｅｒ ｔｈａｎ ２０ ｃｈａｒａｃｔｅｒｓ"
+                )
+                break
             if not username.isalnum():
                 self.ui.error_message(
                     "Ｓｔａｔｕｓ： Ｃｈａｎｇｉｎｇ Ｆａｉｌｅｄ\nＴｈｅ ｕｓｅｒｎａｍｅ ｃａｎ ｏｎｌｙ ｃｏｎｔａｉｎ ｎｕｍｂｅｒｓ \nａｎｄ ａｌｐｈａｂｅｔｓ"

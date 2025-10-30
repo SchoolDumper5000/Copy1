@@ -37,6 +37,11 @@ class LabUtils:
         )
         self.shut(db)
 
+    def delete_group(self, group_name):
+        db, cursor = self.get_cur()
+        cursor.execute('DELETE FROM lab_groups WHERE group_name = ?', (group_name,))
+        self.shut(db)
+
     def add_member(self, group_name, username):
         """Add a member as Student if they exist in users table"""
         if not self.auth.user_exists(username):

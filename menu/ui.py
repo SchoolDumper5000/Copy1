@@ -25,7 +25,7 @@ class MenuInterface:
     """)
     self.ui.primary_line("grey", 90)
     options = [
-        'Ｍａｎａｇｅ Ａｃｃｏｕｎｔ\n', 'Ｌａｂ Ｇｒｏｕｐs\n', 'Experiments \n', 'Ｌｏｇ Ｏｕｔ\n'
+        'Ｍａｎａｇｅ Ａｃｃｏｕｎｔ\n', 'Ｌａｂ Ｇｒｏｕｐs\n', 'Ｅｘｐｅｒｉｍｅｎｔｓ\n', 'Ｌｏｇ Ｏｕｔ\n'
     ]
     index = survey.routines.select(
         '\nＰｌｅａｓｅ  ｓｅｌｅｃｔ  ｏｎｅ  ｏｆ  ｔｈｅ  ｆｏｌｌｏｗｉｎｇ  ｏｐｔｉｏｎｓ:\n',
@@ -36,6 +36,9 @@ class MenuInterface:
     if index == 1:
       os.system('clear')
       return ("LAB_GROUPS", self.logged_in_user)
+    elif index == 2:
+      os.system('clear')
+      return ("EXPERIMENTS", self.logged_in_user)
     if index == 3:
       os.system('clear')
       self.ui.indicator_message("                  Ｌｏｇｇｉｎｇ Ｏｕｔ")
