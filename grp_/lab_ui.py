@@ -14,7 +14,7 @@ class LabGroupHandler:
         self.lab = LabUtils()
         self.lab.create_lab_table()
         self.logged_in_user = logged_in_user
-        self.auth = AuthUtils()  # Added for role checking
+        self.auth = AuthUtils()  
 
     def set_logged_in_user(self, user):
         self.logged_in_user = user
@@ -123,10 +123,10 @@ class LabGroupHandler:
         os.system("clear")
         self.ui.default_message("\t\t\t\tＬａｂ Ｇｒｏｕｐ Ｍａｎａｇｅｍｅｎｔ")
 
-        # 🔍 Determine user role
+        
         creds = self.auth.get_details(self.logged_in_user)
         if creds and creds[3] == "Ｔｅａｃｈｅｒ":
-            # Teacher view
+            
             options = [
                 "Ｃｒｅａｔｅ Ｎｅｗ Ｇｒｏｕｐ\n",
                 "Ｖｉｅｗ Ｍｙ Ｇｒｏｕｐｓ\n",
@@ -134,7 +134,7 @@ class LabGroupHandler:
                 "Ｂａｃｋ\n"
             ]
         else:
-            # Student view (restricted)
+            
             options = [
                 "Ｖｉｅｗ Ｍｙ Ｇｒｏｕｐｓ\n",
                 "Ｂａｃｋ\n"
@@ -147,7 +147,7 @@ class LabGroupHandler:
             evade_color=survey.colors.basic('white'),
             insearch_color=survey.colors.basic('white'))
 
-        # Teacher options
+        
         if creds and creds[3] == "Ｔｅａｃｈｅｒ":
             if index == 0:
                 return self.create_group()
@@ -158,7 +158,7 @@ class LabGroupHandler:
             else:
                 return ("MENU", self.logged_in_user)
         else:
-            # Student options
+            
             if index == 0:
                 return self.list_groups()
             else:
