@@ -21,13 +21,15 @@ class ExperimentHandler:
     def set_logged_in_user(self, user):
         self.logged_in_user = user
 
-    
-    def create_experiment(self):
+    def flush(self):
         os.system("clear")
+        print("\033[0m")
+
+    def create_experiment(self):
+        self.flush()
         self.ui.default_message("Ｃｒｅａｔｅ Ａ Ｎｅｗ Ｅｘｐｅｒｉｍｅｎｔ")
         self.ui.leave_line()
 
-        
         teacher_groups = self.lab.get_groups_by_user(self.logged_in_user)
         teacher_groups = [g[1] for g in teacher_groups if g[3] == "Teacher"]
 
@@ -45,9 +47,9 @@ class ExperimentHandler:
 
         name = input(colored("> Ｅｘｐｅｒｉｍｅｎｔ Ｎａｍｅ :", "white")).strip()
 
-        
         if not name:
-            self.ui.indicator_message("Ｃｒｅａｔｅ ｅｘｐｅｒｉｍｅｎｔ ｃａｎｃｅｌｌｅｄ （Ｎｏ ｎａｍｅ ｇｉｖｅｎ）")
+            self.ui.indicator_message(
+                "Ｃｒｅａｔｅ ｅｘｐｅｒｉｍｅｎｔ ｃａｎｃｅｌｌｅｄ （Ｎｏ ｎａｍｅ ｇｉｖｅｎ）")
             return ("MENU", self.logged_in_user)
 
         aim = input(colored("> Ａｉｍ :", "white"))
@@ -55,16 +57,18 @@ class ExperimentHandler:
         due = input(colored("> Ｄｕｅ Ｄａｔｅ :", "white"))
 
         status_options = ["Ａｃｔｉｖｅ", "Ｏｆｆｌｉｎｅ"]
-        status_index = survey.routines.select("Ｓｅｌｅｃｔ Ｓｔａｔｕｓ:\n", options=status_options)
+        status_index = survey.routines.select("Ｓｅｌｅｃｔ Ｓｔａｔｕｓ:\n",
+                                              options=status_options)
         status = status_options[status_index]
 
-        self.expt.add_experiment(name, group, aim, procedure, due, status, self.logged_in_user)
+        self.expt.add_experiment(name, group, aim, procedure, due, status,
+                                 self.logged_in_user)
         self.ui.success_message(f"Ｅｘｐｅｒｉｍｅｎｔ '{name}' ｃｒｅａｔｅｄ ｓｕｃｃｅｓｓｆｕｌｌｙ！")
 
         return ("MENU", self.logged_in_user)
 
     def teacher_view_experiments(self):
-        os.system("clear")
+        self.flush()
         expts = self.expt.get_experiments_by_teacher(self.logged_in_user)
 
         if not expts:
@@ -72,22 +76,30 @@ class ExperimentHandler:
             return ("MENU", self.logged_in_user)
 
         options = [f"{e[1]}  ({e[5]})\n" for e in expts]
-        index = survey.routines.select("Ｓｅｌｅｃｔ ａｎ ｅｘｐｅｒｉｍｅｎｔ:\n", options=options)
+        index = survey.routines.select("Ｓｅｌｅｃｔ ａｎ ｅｘｐｅｒｉｍｅｎｔ:\n",
+                                       options=options)
         selected = expts[index]
 
         while True:
-            os.system("clear")
+            self.flush()
             print(f"""
+
 Ｅｘｐｅｒｉｍｅｎｔ ｎａｍｅ: {selected[1]}
 Ｇｒｏｕｐ:
-ＡＩＭ: {selected[3]}
+----------------------------------------------------------------
+|ＡＩＭ: {selected[3]}
+
+----------------------------------------------------------------
 ＰＲＯＣＥＤＵＲＥ: {selected[4]}
 ＳＴＡＴＵＳ: {selected[5]}
 ＤＵＥ ＤＡＴＥ: {selected[6]}
 """)
-            
-            sub_options = ["Ｃｈａｎｇｅ Ｓｔａｔｕｓ", "Ｖｉｅｗ Ｒｅｓｕｌｔｓ", "Ｄｅｌｅｔｅ Ｅｘｐｅｒｉｍｅｎｔ", "Ｂａｃｋ"]
-            sub_index = survey.routines.select("Ｓｅｌｅｃｔ ａｎ ｏｐｅｒａｔｉｏｎ:\n", options=sub_options)
+
+            sub_options = [
+                "Ｃｈａｎｇｅ Ｓｔａｔｕｓ", "Ｖｉｅｗ Ｒｅｓｕｌｔｓ", "Ｄｅｌｅｔｅ Ｅｘｐｅｒｉｍｅｎｔ", "Ｂａｃｋ"
+            ]
+            sub_index = survey.routines.select("Ｓｅｌｅｃｔ ａｎ ｏｐｅｒａｔｉｏｎ:\n",
+                                               options=sub_options)
 
             if sub_index == 0:
                 new_status = "Ｏｆｆｌｉｎｅ" if selected[5] == "Ａｃｔｉｖｅ" else "Ａｃｔｉｖｅ"
@@ -97,7 +109,9 @@ class ExperimentHandler:
             elif sub_index == 1:
                 self.view_results(selected[1], selected[2])
             elif sub_index == 2:
-                confirm = input(colored("Ａｒｅ ｙｏｕ ｓｕｒｅ ｙｏｕ ｗａｎｔ ｔｏ ｄｅｌｅｔｅ ？ (y/n): ", "red")).strip().lower()
+                confirm = input(
+                    colored("Ａｒｅ ｙｏｕ ｓｕｒｅ ｙｏｕ ｗａｎｔ ｔｏ ｄｅｌｅｔｅ ？ (y/n): ",
+                            "red")).strip().lower()
                 if confirm == "y":
                     self.expt.delete_experiment(selected[1])
                     self.ui.success_message("Ｅｘｐｅｒｉｍｅｎｔ ｄｅｌｅｔｅｄ ｓｕｃｃｅｓｓｆｕｌｌｙ！")
@@ -108,22 +122,27 @@ class ExperimentHandler:
         return ("MENU", self.logged_in_user)
 
     def view_results(self, experiment_name, group_name):
-        os.system("clear")
+        self.flush()
         results = self.expt.get_results_for_experiment(experiment_name)
         members = self.lab.get_members(group_name)
         all_students = [m[0] for m in members if m[1] == "Student"]
         students_with_results = [r[1] for r in results]
 
         print(f"\nＲｅｓｕｌｔｓ ｆｏｒ ｅｘｐｅｒｉｍｅｎｔ: {experiment_name}\n")
-        print("+--------------------+--------------------+--------------------+")
-        print("| Student Name       | Username           | Result             |")
-        print("+--------------------+--------------------+--------------------+")
+        print(
+            "+--------------------+--------------------+--------------------+")
+        print(
+            "| Student Name       | Username           | Result             |")
+        print(
+            "+--------------------+--------------------+--------------------+")
         for r in results:
             print(f"| {r[0]:18} | {r[1]:18} | {str(r[2]):18} |")
-        print("+--------------------+--------------------+--------------------+")
+        print(
+            "+--------------------+--------------------+--------------------+")
 
-        
-        missing_students = [s for s in all_students if s not in students_with_results]
+        missing_students = [
+            s for s in all_students if s not in students_with_results
+        ]
         if missing_students:
             print("\nStudents who have yet to give their result:\n")
             print("+--------------------+")
@@ -135,9 +154,8 @@ class ExperimentHandler:
 
         input("\nＰｒｅｓｓ ＥＮＴＥＲ ｔｏ ｇｏ ｂａｃｋ．．．")
 
-    
     def student_view_experiments(self):
-        os.system("clear")
+        self.flush()
         creds = self.auth.get_details(self.logged_in_user)
         name = creds[4]
         groups = self.lab.get_groups_by_user(self.logged_in_user)
@@ -155,10 +173,11 @@ class ExperimentHandler:
             return ("MENU", self.logged_in_user)
 
         options = [f"{e[1]} ({e[5]})\n" for e in all_expts]
-        index = survey.routines.select("Ｓｅｌｅｃｔ ａｎ ｅｘｐｅｒｉｍｅｎｔ:\n", options=options)
+        index = survey.routines.select("Ｓｅｌｅｃｔ ａｎ ｅｘｐｅｒｉｍｅｎｔ:\n",
+                                       options=options)
         selected = all_expts[index]
 
-        os.system("clear")
+        self.flush()
         print(f"""
 ＳＴＡＴＵＳ: {selected[5]}
 ＤＵＥ ＤＡＴＥ: {selected[6]}
@@ -166,14 +185,17 @@ class ExperimentHandler:
 ＰＲＯＣＥＤＵＲＥ: {selected[4]}
 """)
 
-        existing_result = self.expt.get_result(selected[2], selected[1], self.logged_in_user)
+        existing_result = self.expt.get_result(selected[2], selected[1],
+                                               self.logged_in_user)
 
         if selected[5] == "Ａｃｔｉｖｅ":
             result = input(colored("> Ｅｎｔｅｒ ｙｏｕｒ ｒｅｓｕｌｔ :", "white"))
             if existing_result is None:
-                self.expt.add_result(selected[2], selected[1], name, self.logged_in_user, result)
+                self.expt.add_result(selected[2], selected[1], name,
+                                     self.logged_in_user, result)
             else:
-                self.expt.update_result(selected[2], selected[1], self.logged_in_user, result)
+                self.expt.update_result(selected[2], selected[1],
+                                        self.logged_in_user, result)
             self.ui.success_message("Ｒｅｓｕｌｔ ｓｕｂｍｉｔｔｅｄ ｓｕｃｃｅｓｓｆｕｌｌｙ！")
         else:
             print(f"\nＥｘｐｅｒｉｍｅｎｔ ｉｓ ｏｆｆｌｉｎｅ． Ｙｏｕｒ ｒｅｓｕｌｔ: {existing_result}")
@@ -181,19 +203,17 @@ class ExperimentHandler:
 
         return ("MENU", self.logged_in_user)
 
-    
     def handler(self):
-        os.system("clear")
+        self.flush()
         creds = self.auth.get_details(self.logged_in_user)
         user_type = creds[3]
 
         if user_type == "Ｔｅａｃｈｅｒ":
             options = [
-                "Ｃｒｅａｔｅ Ｎｅｗ Ｅｘｐｅｒｉｍｅｎｔ\n",
-                "Ｖｉｅｗ Ａｌｌ Ｅｘｐｅｒｉｍｅｎｔｓ\n",
-                "Ｂａｃｋ\n"
+                "Ｃｒｅａｔｅ Ｎｅｗ Ｅｘｐｅｒｉｍｅｎｔ\n", "Ｖｉｅｗ Ａｌｌ Ｅｘｐｅｒｉｍｅｎｔｓ\n", "Ｂａｃｋ\n"
             ]
-            index = survey.routines.select('\nＰｌｅａｓｅ ｃｈｏｏｓｅ:\n', options=options)
+            index = survey.routines.select('\nＰｌｅａｓｅ ｃｈｏｏｓｅ:\n',
+                                           options=options)
             if index == 0:
                 return self.create_experiment()
             elif index == 1:
@@ -201,16 +221,13 @@ class ExperimentHandler:
             else:
                 return ("MENU", self.logged_in_user)
         else:
-            options = [
-                "Ｖｉｅｗ Ａｌｌ Ｅｘｐｅｒｉｍｅｎｔｓ\n",
-                "Ｂａｃｋ\n"
-            ]
-            index = survey.routines.select('\nＰｌｅａｓｅ ｃｈｏｏｓｅ:\n', options=options)
+            options = ["Ｖｉｅｗ Ａｌｌ Ｅｘｐｅｒｉｍｅｎｔｓ\n", "Ｂａｃｋ\n"]
+            index = survey.routines.select('\nＰｌｅａｓｅ ｃｈｏｏｓｅ:\n',
+                                           options=options)
             if index == 0:
                 return self.student_view_experiments()
             else:
                 return ("MENU", self.logged_in_user)
-
 
 
 #YEEEEEEEEESSSSSSSSSSSSSSSS
