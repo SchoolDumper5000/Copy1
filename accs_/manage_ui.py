@@ -16,7 +16,42 @@ class AccManageInterface:
     self.ui = Messages()
     self.creds = None
     self.color = colored
+  def change_name(self):
+    while True:
+        os.system("clear")
+        self.ui.default_message(
+            f"Ｃｕｒｒｅｎｔ ｎａｍｅ ｓｅｔ ｔｏ：'{self.creds[4]}'\nＴｏ ｇｏ ｂａｃｋ ｐｒｅｓｓ ［ ＥＮＴＥＲ ］"
+        )
+        name = input(self.color("> Ｎａｍｅ :", "white"))
+        self.ui.primary_line("grey", 80)
+        time.sleep(1)
 
+        # Return to previous menu if blank
+        if not name.strip():
+            break
+
+        # Check that all words contain only alphabets
+        names = name.split()
+        if not all(e.isalpha() for e in names):
+            self.ui.error_message(
+                "Ｓｔａｔｕｓ： Ｃｈａｎｇｉｎｇ Ｆａｉｌｅｄ\nＴｈｅ ｎａｍｅ ｃａｎ ｏｎｌｙ ｃｏｎｔａｉｎ ａｌｐｈａｂｅｔｓ"
+            )
+            time.sleep(1.5)
+            continue
+
+        # Update name in database
+        success = self.auth.update_name(self.logged_in_user,  name)
+
+        if success:
+            self.ui.success_message("Ｓｔａｔｕｓ： Ｎａｍｅ ｕｐｄａｔｅｄ ｓｕｃｃｅｓｓｆｕｌｌｙ！")
+            # Refresh credentials after update
+            self.creds = self.auth.get_details(self.logged_in_user)
+        else:
+            self.ui.error_message("Ｓｔａｔｕｓ： Ｆａｉｌｅｄ ｔｏ ｕｐｄａｔｅ ｎａｍｅ")
+
+        time.sleep(1.5)
+        break
+  '''
   def change_name(self):
     breakit = False
     while not breakit:
@@ -28,6 +63,7 @@ class AccManageInterface:
       time.sleep(1)
       if name == " " or name == "": break
       names = name.split()
+      print(names)
       for e in names:
         if not e.isalpha():
           self.ui.error_message(
@@ -38,7 +74,7 @@ class AccManageInterface:
           breakit = True
           self.auth.update_name(self.logged_in_user, self.creds[2], name)
           break
-
+  '''
   def change_password(self):
     while True:
 
