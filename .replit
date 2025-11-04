@@ -18,3 +18,24 @@ deploymentTarget = "cloudrun"
 expertMode = true
 
 [workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Lab Management System"
+
+[[workflows.workflow]]
+name = "Lab Management System"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python main.py"
+
+[workflows.workflow.metadata]
+outputType = "console"
