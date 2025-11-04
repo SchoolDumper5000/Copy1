@@ -42,7 +42,7 @@ class MenuInterface:
     if index == 3:
       os.system('clear')
       self.ui.indicator_message("                  Ｌｏｇｇｉｎｇ Ｏｕｔ")
-      return ("AUTH",)
+      return ("AUTH",False)
     elif index == 0:
       os.system('clear')
       return ("MANAGE_ACCOUNT",)
