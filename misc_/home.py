@@ -41,8 +41,16 @@ def handler() -> str:
 － Ｔｅａｃｈｅｒ ａｎｄ Ｓｔｕｄｅｎｔ Ａｃｃｏｕｎｔｓ
 
 
-
+        
+Ｃｏｍｍａｎｄｓ:
+        
+-> Ｐｒｅｓｓ ［ Ｑ ］ ａｎｄ ｈｉｔ ［ ＥＮＴＥＲ ］ ｔｏ ｑｕｉｔ．
+        
+-> Ｐｒｅｓｓ ［ ＥＮＴＥＲ ］ ｔｏ ｉｎｉｔｉａｔｅ  ａｃｃｅｓｓ.
 
 """)
-  choice = input("Ｐｒｅｓｓ ［ ＥＮＴＥＲ ］ ｔｏ ｉｎｉｔｉａｔｅ  ａｃｃｅｓｓ：")
-  return ("AUTH","Nothing")
+  choice = input()
+  if choice.lower() == "q":
+    return ("AUTH",True)
+  else:
+    return ("AUTH",False)
