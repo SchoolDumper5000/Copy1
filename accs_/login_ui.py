@@ -60,4 +60,4 @@ def login_handler():
                 return ("LOGIN", )
 
     else:
-        return ("AUTH", )
+        return ("AUTH", False)
