@@ -7,6 +7,7 @@ from accs_.signup_ui import SignUpHandler
 from menu.ui import MenuInterface
 from grp_.lab_ui import LabGroupHandler
 from Experiments_.expt_ui import ExperimentHandler
+#from accs_.manage_ui import AccManageInterface
 import time
 
 auth_utils = AuthUtils()
@@ -35,7 +36,7 @@ while True:
     if next[0] == "MENU":
       menuHandler.set_logged_in_user(next[1])
     #elif next[0] == "MANAGE_ACCOUNT":
-    #manageHandler.logged_in_user = menuHandler.logged_in_user
+      #manageHandler.logged_in_user = menuHandler.logged_in_user
     elif next[0] == "LAB_GROUPS":
       labHandler.set_logged_in_user(menuHandler.logged_in_user)
     elif next[0] == "EXPERIMENTS":

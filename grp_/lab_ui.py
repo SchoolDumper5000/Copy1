@@ -24,7 +24,15 @@ class LabGroupHandler:
         self.ui.default_message("Ｃｒｅａｔｅ Ａ Ｎｅｗ Ｌａｂ Ｇｒｏｕｐ")
         self.ui.leave_line()
 
-        group_name = input(colored("> Ｇｒｏｕｐ Ｎａｍｅ :", "white"))
+        while True:
+
+            group_name = input(colored("> Ｇｒｏｕｐ Ｎａｍｅ :", "white"))
+            if len(group_name)<21:
+                break
+            else:
+                self.ui.error_message("Group name cannot be longer than 20 characters")
+
+        
         self.ui.primary_line("grey", 80)
         time.sleep(1)
 

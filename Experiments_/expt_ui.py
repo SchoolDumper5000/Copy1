@@ -45,7 +45,14 @@ class ExperimentHandler:
             insearch_color=survey.colors.basic('white'))
         group = teacher_groups[index]
 
-        name = input(colored("> Ｅｘｐｅｒｉｍｅｎｔ Ｎａｍｅ :", "white")).strip()
+        while True:
+
+            name = input(colored("> Ｅｘｐｅｒｉｍｅｎｔ Ｎａｍｅ :", "white")).strip()
+            if len(name) < 20:
+                break
+            else:
+                self.ui.error_message(
+                    "Experiment name cannot be longer than 20 characters")
 
         if not name:
             self.ui.indicator_message(
@@ -53,6 +60,7 @@ class ExperimentHandler:
             return ("MENU", self.logged_in_user)
 
         aim = input(colored("> Ａｉｍ :", "white"))
+
         procedure = input(colored("> Ｐｒｏｃｅｄｕｒｅ (Ｍｕｌｔｉ－Ｌｉｎｅ) :", "white"))
         due = input(colored("> Ｄｕｅ Ｄａｔｅ :", "white"))
 
@@ -79,20 +87,39 @@ class ExperimentHandler:
         index = survey.routines.select("Ｓｅｌｅｃｔ ａｎ ｅｘｐｅｒｉｍｅｎｔ:\n",
                                        options=options)
         selected = expts[index]
-
+        newaimlines = [
+            selected[3][i:i + 40] for i in range(0, len(selected[3]), 40)
+        ]
+        statuscolor = "green" if selected[5] == "Ａｃｔｉｖｅ" else "red"
         while True:
             self.flush()
+            length = 80
+            leftgap = (20 - len(selected[1])) // 2
+            rightgap = 20 - len(selected[1]) - leftgap
+
             print(f"""
+{colored(f'+{"-"*80}+', 'grey')}
+{colored('|', 'grey')}{' '*30}{' '*leftgap}{selected[1].upper()}{' '*rightgap}{' '*30}{colored('|', 'grey')}
+{colored(f'+{"-"*80}+', 'grey')}
 
-Ｅｘｐｅｒｉｍｅｎｔ ｎａｍｅ: {selected[1]}
-Ｇｒｏｕｐ:
-----------------------------------------------------------------
-|ＡＩＭ: {selected[3]}
+{colored(f'+{"-"*80}+', 'grey')}
+{colored('|', 'grey')}Ａｉｍ:""")
+            for line in newaimlines:
+                print(f"{colored('|', 'grey')}{line:80}")
+            print(colored(f'+{"-"*80}+', 'grey'))
 
-----------------------------------------------------------------
+            print(f"""
+{colored(f'+{"-"*80}+', 'grey')}
 ＰＲＯＣＥＤＵＲＥ: {selected[4]}
-ＳＴＡＴＵＳ: {selected[5]}
+{colored(f'+{"-"*80}+', 'grey')}
+
+{colored(f'+{"-"*80}+', 'grey')}
+ＳＴＡＴＵＳ: {colored(selected[5], statuscolor)}
+{colored(f'+{"-"*80}+', 'grey')}
+
+{colored(f'+{"-"*80}+', 'grey')}
 ＤＵＥ ＤＡＴＥ: {selected[6]}
+{colored(f'+{"-"*80}+', 'grey')}
 """)
 
             sub_options = [
@@ -103,9 +130,11 @@ class ExperimentHandler:
 
             if sub_index == 0:
                 new_status = "Ｏｆｆｌｉｎｅ" if selected[5] == "Ａｃｔｉｖｅ" else "Ａｃｔｉｖｅ"
+                statuscolor = "green" if new_status == "Ａｃｔｉｖｅ" else "red"
                 self.expt.update_status(selected[1], new_status)
                 selected = self.expt.get_experiment(selected[1])
                 self.ui.success_message(f"Ｓｔａｔｕｓ ｃｈａｎｇｅｄ ｔｏ {new_status}")
+
             elif sub_index == 1:
                 self.view_results(selected[1], selected[2])
             elif sub_index == 2:
@@ -125,6 +154,7 @@ class ExperimentHandler:
         self.flush()
         results = self.expt.get_results_for_experiment(experiment_name)
         members = self.lab.get_members(group_name)
+
         all_students = [m[0] for m in members if m[1] == "Student"]
         students_with_results = [r[1] for r in results]
 
@@ -155,16 +185,18 @@ class ExperimentHandler:
         input("\nＰｒｅｓｓ ＥＮＴＥＲ ｔｏ ｇｏ ｂａｃｋ．．．")
 
     def student_view_experiments(self):
+        
         self.flush()
         creds = self.auth.get_details(self.logged_in_user)
         name = creds[4]
         groups = self.lab.get_groups_by_user(self.logged_in_user)
-
+        
         if not groups:
             self.ui.error_message("Ｎｏ ｇｒｏｕｐ ｆｏｕｎｄ．")
             return ("MENU", self.logged_in_user)
 
         all_expts = []
+        
         for g in groups:
             all_expts += self.expt.get_experiments_by_group(g[1])
 
@@ -175,19 +207,49 @@ class ExperimentHandler:
         options = [f"{e[1]} ({e[5]})\n" for e in all_expts]
         index = survey.routines.select("Ｓｅｌｅｃｔ ａｎ ｅｘｐｅｒｉｍｅｎｔ:\n",
                                        options=options)
-        selected = all_expts[index]
 
         self.flush()
-        print(f"""
-ＳＴＡＴＵＳ: {selected[5]}
-ＤＵＥ ＤＡＴＥ: {selected[6]}
-ＡＩＭ: {selected[3]}
-ＰＲＯＣＥＤＵＲＥ: {selected[4]}
-""")
+        
+        selected = all_expts[index]
 
+        
+        newaimlines = [
+            selected[3][i:i + 40] for i in range(0, len(selected[3]), 40)
+        ]
+        statuscolor = "green" if selected[5] == "Ａｃｔｉｖｅ" else "red"
+        
+        length = 80
+        leftgap = (20 - len(selected[1])) // 2
+        rightgap = 20 - len(selected[1]) - leftgap
+
+        print(f"""
+{colored(f'+{"-"*80}+', 'grey')}
+{colored('|', 'grey')}{' '*30}{' '*leftgap}{selected[1].upper()}{' '*rightgap}{' '*30}{colored('|', 'grey')}
+{colored(f'+{"-"*80}+', 'grey')}
+
+{colored(f'+{"-"*80}+', 'grey')}
+{colored('|', 'grey')}Ａｉｍ:""")
+        for line in newaimlines:
+            print(f"{colored('|', 'grey')}{line:80}")
+        print(colored(f'+{"-"*80}+', 'grey'))
+
+        print(f"""
+{colored(f'+{"-"*80}+', 'grey')}
+ＰＲＯＣＥＤＵＲＥ: {selected[4]}
+{colored(f'+{"-"*80}+', 'grey')}
+
+{colored(f'+{"-"*80}+', 'grey')}
+ＳＴＡＴＵＳ: {colored(selected[5], statuscolor)}
+{colored(f'+{"-"*80}+', 'grey')}
+
+{colored(f'+{"-"*80}+', 'grey')}
+ＤＵＥ ＤＡＴＥ: {selected[6]}
+{colored(f'+{"-"*80}+', 'grey')}
+""")
         existing_result = self.expt.get_result(selected[2], selected[1],
                                                self.logged_in_user)
 
+        
         if selected[5] == "Ａｃｔｉｖｅ":
             result = input(colored("> Ｅｎｔｅｒ ｙｏｕｒ ｒｅｓｕｌｔ :", "white"))
             if existing_result is None:

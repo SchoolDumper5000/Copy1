@@ -8,3 +8,5 @@ dependencies = [
     "survey>=5.4.2",
     "termcolor>=3.1.0",
 ]
+[tool.replit.start]
+command = "python main.py"
