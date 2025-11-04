@@ -77,13 +77,13 @@ class AuthUtils:
     else:
       return False
 
-  def update_name(self, username, password, name):
-    if self.verify_user(username, password):
-      db, cursor = self.get_cur()
-      cursor.execute('UPDATE users SET name = ? WHERE username = ?',
-                     (name, username))
-      self.shut(db)
-      return True
+  def update_name(self, username, name):
+    
+    db, cursor = self.get_cur()
+    cursor.execute('UPDATE users SET name = ? WHERE username = ?',
+                    (name, username))
+    self.shut(db)
+    return True
 
   def update_password(self, username, password, new_password):
     if self.verify_user(username, password):
